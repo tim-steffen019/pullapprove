@@ -1,0 +1,23 @@
+version: 3
+
+pullapprove_conditions:
+- "'WIP' not in title"
+- "base.ref == 'dev'"
+
+notifications:
+- when: pull_request.opened
+  # only need to send this to external-contributors
+  comment: >
+    Hey @{{ author }}, please make sure your tests pass and you have looked everything over. Then we will review.
+    Thanks for the PR!
+- when: pullapprove.approved
+  comment: "The review is completed. @exampleuser, please merge this in when ready."
+
+groups:
+  code:
+    reviews:
+      required: 1
+    reviewers:
+      users:
+      - tim-steffen019
+      - tim-steffen
