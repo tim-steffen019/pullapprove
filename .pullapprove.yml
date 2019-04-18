@@ -1,23 +1,62 @@
 version: 3
 
 pullapprove_conditions:
-- "'WIP' not in title"
-- "base.ref == 'dev'"
+- "base.ref == 'dev' or base.ref == 'qa' or base.ref == 'prod'"
 
 notifications:
+- when: pull_request.opened
+  if: "base.ref == 'qa' and head.ref != 'dev'"
+  comment: "FAIL THIS REQUEST"
+  
 - when: pull_request.opened
   # only need to send this to external-contributors
   comment: >
     Hey @{{ author }}, please make sure your tests pass and you have looked everything over. Then we will review.
     Thanks for the PR!
+    
 - when: pullapprove.approved
   comment: "The review is completed. @exampleuser, please merge this in when ready."
 
+- when: pull_request.opened
+  if: "base.ref == 'qa' and head.ref == 'dev'"
+  comment: "This is an acceptable promotion path"
+
+
 groups:
-  code:
+  dev:
     reviews:
       required: 1
     reviewers:
       users:
       - tim-steffen019
       - tim-steffen
+      - kanigicharla8
+    conditions:
+      - "base.ref == 'dev'"
+  qa:
+    reviews:
+      required: 1
+    reviewers:
+      users:
+      - tim-steffen019
+      - kanigicharla8
+    conditions:
+      - "base.ref == 'qa'"
+      - "head.ref == 'dev'"
+  qafail:
+    reviews:
+      required: 100
+    conditions:
+      - "base.ref == 'qa'"
+      - "head.ref != 'dev'"
+  prodfail:
+    reviews:
+      required: 100
+    reviewers:
+      users:
+      - tim-steffen019
+      - tim-steffen
+      - kanigicharla8
+    conditions:
+      - "base.ref == 'prod'"
+      - "head.ref != 'qa'" 
