@@ -23,7 +23,7 @@ notifications:
 
 
 groups:
-  dev:
+  Developers:
     reviews:
       required: 1
     reviewers:
@@ -33,7 +33,8 @@ groups:
       - kanigicharla8
     conditions:
       - "base.ref == 'dev'"
-  qa:
+      
+  QualityAssurance:
     reviews:
       required: 1
     reviewers:
@@ -43,6 +44,30 @@ groups:
     conditions:
       - "base.ref == 'qa'"
       - "head.ref == 'dev'"
+      
+  Security:
+    reviews:
+      required: 1
+    reviewers:
+      users:
+      - tim-steffen019
+      - kanigicharla8
+    conditions:
+      - "base.ref == 'qa'"
+      - "head.ref == 'dev'"
+      
+  Networking:
+    reviews:
+      required: 1
+    reviewers:
+      users:
+      - tim-steffen019
+      - kanigicharla8
+    conditions:
+      - "base.ref == 'qa'"
+      - "head.ref == 'dev'"
+      
+      
   qafail:
     reviews:
       required: 100
@@ -52,11 +77,6 @@ groups:
   prodfail:
     reviews:
       required: 100
-    reviewers:
-      users:
-      - tim-steffen019
-      - tim-steffen
-      - kanigicharla8
     conditions:
       - "base.ref == 'prod'"
       - "head.ref != 'qa'" 
